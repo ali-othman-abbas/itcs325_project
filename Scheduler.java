@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -36,7 +37,7 @@ class Scheduler {
         arrivalQueue.add(process);
     }
 
-    public void run() {
+    public ArrayList<Process> run() {
         int time = 0;
         while(!readyQueue.isEmpty() || !arrivalQueue.isEmpty() || !processor.isEmpty()) {
             while(time == arrivalQueue.peek().getArrivalTime()) {
@@ -72,7 +73,15 @@ class Scheduler {
         }
 
         updateSchedulingInfo();
+
+        ArrayList<Process> result = new ArrayList<>(finishedProcs);
+        Collections.sort(result, (proc1, proc2) -> proc1.getArrivalTime() - proc2.getArrivalTime());
+
+        return result;
+
     }
+
+
 
     private void updateSchedulingInfo() {
         for (Process process : finishedProcs) {
