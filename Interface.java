@@ -13,7 +13,7 @@ class Interface{
         /*The class process has various attributes related to processes */
         /*The class scheduler handles all the logic related scheduling, the method
          * run() simulates the schudling algorithm, and returns an arrayList of 
-         * Processes with reqquired data added.
+         * Processes with reqquired data added. The method addProcess adds a process to be scheduled.
          */
     }
 }
