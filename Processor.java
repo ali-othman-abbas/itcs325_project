@@ -24,10 +24,10 @@ class Processor {
     }
 
     public void decBurstTime() {
-        this.process.setBurstTime(this.process.getBurstTime() - 1);
+        this.process.decrementBurstTime();
     }
 
     public boolean isFinished() {
-        return this.process.getBurstTime() == 0;
+        return !isEmpty() && this.process.getBurstTime() == 0;
     }
 }

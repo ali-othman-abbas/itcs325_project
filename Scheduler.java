@@ -1,9 +1,11 @@
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
 class Scheduler {
     private PriorityQueue<Process> arrivalQueue;
     private PriorityQueue<Process> readyQueue;
+    private ArrayList<Process> finishedProcs;
     private Processor processor;
 
     public Scheduler() {
@@ -36,12 +38,46 @@ class Scheduler {
 
     public void run() {
         int time = 0;
-        while(!readyQueue.isEmpty() && !arrivalQueue.isEmpty() && processor.isEmpty()) {
+        while(!readyQueue.isEmpty() || !arrivalQueue.isEmpty() || !processor.isEmpty()) {
             while(time == arrivalQueue.peek().getArrivalTime()) {
                 readyQueue.add(arrivalQueue.poll());
             }
 
+            if(!processor.isEmpty()) {
+                processor.decBurstTime();
+            }
+
+            if(processor.isFinished()) {
+                Process finished = processor.discharge();
+                finished.setCompletionTime(time);
+                finishedProcs.add(finished);
+            }
             
+            Process admited = null;
+            if(!readyQueue.isEmpty() && processor.isEmpty()) {
+                admited = readyQueue.poll();
+                processor.admit(admited);
+            }else if(!readyQueue.isEmpty() && processor.canPrempt(readyQueue.peek())) {
+                Process temp = processor.discharge();
+                admited = readyQueue.poll();
+                processor.admit(admited);
+                readyQueue.add(temp);
+            }
+
+            if(admited != null && !admited.wasAdmited()) {
+                admited.setResponseTime(time);
+            }
+
+            time++;
+        }
+
+        updateSchedulingInfo();
+    }
+
+    private void updateSchedulingInfo() {
+        for (Process process : finishedProcs) {
+            process.updateTurnAroundTime();
+            process.updateWaitingTime();
         }
     }
 }
