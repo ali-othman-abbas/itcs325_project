@@ -26,4 +26,8 @@ class Process {
     public int getPriority() {
         return priority;
     }
+
+    public void setBurstTime(int burstTime) {
+        this.burstTime = burstTime;
+    }
 }
