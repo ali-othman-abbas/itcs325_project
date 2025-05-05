@@ -37,6 +37,20 @@ class Process {
         return priority;
     }
 
+    public int getResponseTime() {
+        return responseTime;
+    }
+
+    public int getTurnaroundTime() {
+        return turnaroundTime;
+    }
+
+    public int getWaitingTime() {
+        return waitingTime;
+    }
+
+
+
     public void decrementBurstTime() {
         this.burstTime = this.burstTime - 1;
     }
