@@ -17,7 +17,8 @@ class Process {
         this.priority = priority;
         waitingTime = 0;
         responseTime = 0;
-        turnaroundTime = -1;
+        turnaroundTime = 0;
+        responseTime = -1;
     }
 
     public int getPid() {
