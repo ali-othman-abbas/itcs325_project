@@ -9,66 +9,76 @@ class Interface{
 
     public void start() {
         Scheduler scheduler = new Scheduler();
+        scanner = new Scanner(System.in);
 
-        System.out.println("Enter number of processes:");
-        int n = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter Process ID, arrival time, burst time, priority for each process.");
+        System.out.println("All the fields are to be seperated by space.");
+        System.out.println("Enter (0 0 0 0) to stop.");
+        while(true) {
+            System.out.print("enter fields: ");
+            String input = scanner.nextLine();
+            String[] fields = input.split("[ ]+");
+            if(fields.length != 4) {
+                System.out.println("Enter only 4 numbers, each seperated by spaces");
+                continue;
+            }
+            if(fields[0].equals("0") 
+            && fields[1].equals("0") 
+            && fields[2].equals("0") 
+            && fields[3].equals("0")) {
+                break;
+            }
+            int pid = 0;
+            int arriveTime = 0;
+            int burstTime = 0;
+            int priority = 0;
 
-        int pid;
-        int pids [] = new int [n];
+            try {
+                pid = Integer.parseInt(fields[0]);
+                arriveTime = Integer.parseInt(fields[1]);
+                burstTime = Integer.parseInt(fields[2]);
+                priority = Integer.parseInt(fields[3]);
+            } catch (NumberFormatException e) {
+                System.out.println("Make sure that all the fields are numbers.");
+                continue;
+            }
 
-        for (int i = 0; i < n; i++) {
-            boolean flag = true;
-            System.out.println("Enter details for Process " + (i + 1) + ":");
-
-            while (flag){
-                flag = false;
-                System.out.print("Process ID: ");
-                pid = Integer.parseInt(scanner.nextLine());
-
-                if(i != 0) {
-                    for (int j = 0; j < i; j++) {
-                        if (pids [j] == pid){
-                            flag = true;
-                            System.out.println("Enter a unique process ID");
-                        }
-                    }
-                }pids [i] = pid;
-            }pid = pids[i];
-
-            System.out.print("Arrival Time: ");
-            int arrivalTime = Integer.parseInt(scanner.nextLine());
-
-            System.out.print("Burst Time: ");
-            int burstTime = Integer.parseInt(scanner.nextLine());
-
-            System.out.print("Priority: ");
-            int priority = Integer.parseInt(scanner.nextLine());
-            
-            scheduler.addProcess(new Process(pid, arrivalTime, burstTime,priority));
-            System.out.println();
+            Process process = new Process(pid, arriveTime, burstTime, priority);
+            boolean unique = scheduler.addProcess(process);
+            if(!unique) {
+                System.out.println("No two processes should have the same pid.");
+                continue;
+            }
         }
 
         scheduler.run(); 
 
         System.out.println("\n--- Process Statistics ---");
+        double sumWaitingTime = 0;
+        double sumTurnaroundTime = 0;
+        double sumResponseTime = 0;
+        int count = 0;
         for (Process p : scheduler.getProcesses()) {
+            count++;
             System.out.println("Process ID: " + p.getPid());
             System.out.println("Waiting Time: " + p.getWaitingTime());
             System.out.println("Turnaround Time: " + p.getTurnaroundTime());
             System.out.println("Response Time: " + p.getResponseTime());
             System.out.println("------------------------");
+            sumWaitingTime = sumWaitingTime + p.getWaitingTime();
+            sumTurnaroundTime = sumTurnaroundTime + p.getTurnaroundTime();
+            sumResponseTime = sumResponseTime + p.getResponseTime();
         }
+
+        System.out.println("Average Waiting Time: " + sumWaitingTime / count);
+        System.out.println("Average Turnaround Time: " + sumTurnaroundTime / count);
+        System.out.println("Average Response Time: " + sumResponseTime / count);
 
         System.out.println("\n--- Gantt Chart ---");
-        for (Timeline t : scheduler.getTimelines()) {
-            System.out.print("| " + t.getPid() + " ");
-        }
-        System.out.println("|");
 
-        for (Timeline t : scheduler.getTimelines()) {
-            System.out.print(t.getStartTime() + "     ");
+        for (Timeline timeline : scheduler.getTimelines()) {
+            System.out.println(timeline);
         }
-        System.out.println(scheduler.getTimelines().get(scheduler.getTimelines().size() - 1).getEndTime());
 
         /*Todo */
 

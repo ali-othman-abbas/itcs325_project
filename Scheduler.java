@@ -32,10 +32,17 @@ class Scheduler {
         );
         this.readyQueue = new PriorityQueue<>(comp);
         this.processor = new Processor();
+        this.finishedProcs = new ArrayList<>();
+        this.timelines = new ArrayList<>();
     }
 
-    public void addProcess(Process process) {
-        arrivalQueue.add(process);
+    public boolean addProcess(Process process) {
+        if(arrivalQueue.contains(process)) {
+            return false;
+        } else {
+            arrivalQueue.add(process);
+            return true;
+        }
     }
 
     public void run() {
@@ -43,7 +50,7 @@ class Scheduler {
         int startTime = 0;
         int endTime = 0;
         while(!readyQueue.isEmpty() || !arrivalQueue.isEmpty() || !processor.isEmpty()) {
-            while(time == arrivalQueue.peek().getArrivalTime()) {
+            while(!arrivalQueue.isEmpty() && time == arrivalQueue.peek().getArrivalTime()) {
                 readyQueue.add(arrivalQueue.poll());
             }
 

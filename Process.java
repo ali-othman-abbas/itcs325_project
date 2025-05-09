@@ -74,4 +74,21 @@ class Process {
     public void setCompletionTime(int completionTime) {
         this.completionTime = completionTime;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object == null) {
+            return false;
+        }
+        if(!(object instanceof Process)) {
+            return false;
+        }
+        Process otherProcess = (Process) object;
+
+        if(otherProcess.getPid() == this.pid) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
