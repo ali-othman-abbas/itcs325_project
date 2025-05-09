@@ -8,6 +8,68 @@ class Interface{
     }
 
     public void start() {
+        Scheduler scheduler = new Scheduler();
+
+        System.out.println("Enter number of processes:");
+        int n = Integer.parseInt(scanner.nextLine());
+
+        int pid;
+        int pids [] = new int [n];
+
+        for (int i = 0; i < n; i++) {
+            boolean flag = true;
+            System.out.println("Enter details for Process " + (i + 1) + ":");
+
+            while (flag){
+                flag = false;
+                System.out.print("Process ID: ");
+                pid = Integer.parseInt(scanner.nextLine());
+
+                if(i != 0) {
+                    for (int j = 0; j < i; j++) {
+                        if (pids [j] == pid){
+                            flag = true;
+                            System.out.println("Enter a unique process ID");
+                        }
+                    }
+                }pids [i] = pid;
+            }pid = pids[i];
+
+            System.out.print("Arrival Time: ");
+            int arrivalTime = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Burst Time: ");
+            int burstTime = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Priority: ");
+            int priority = Integer.parseInt(scanner.nextLine());
+            
+            scheduler.addProcess(new Process(pid, arrivalTime, burstTime,priority));
+            System.out.println();
+        }
+
+        scheduler.run(); 
+
+        System.out.println("\n--- Process Statistics ---");
+        for (Process p : scheduler.getProcesses()) {
+            System.out.println("Process ID: " + p.getPid());
+            System.out.println("Waiting Time: " + p.getWaitingTime());
+            System.out.println("Turnaround Time: " + p.getTurnaroundTime());
+            System.out.println("Response Time: " + p.getResponseTime());
+            System.out.println("------------------------");
+        }
+
+        System.out.println("\n--- Gantt Chart ---");
+        for (Timeline t : scheduler.getTimelines()) {
+            System.out.print("| " + t.getPid() + " ");
+        }
+        System.out.println("|");
+
+        for (Timeline t : scheduler.getTimelines()) {
+            System.out.print(t.getStartTime() + "     ");
+        }
+        System.out.println(scheduler.getTimelines().get(scheduler.getTimelines().size() - 1).getEndTime());
+
         /*Todo */
 
         /*The class process has various attributes related to processes */
