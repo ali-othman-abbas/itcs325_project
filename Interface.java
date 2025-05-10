@@ -10,22 +10,23 @@ class Interface{
     public void start() {
         Scheduler scheduler = new Scheduler();
         scanner = new Scanner(System.in);
+        int countP = 1;
 
         System.out.println("Enter Process ID, arrival time, burst time, priority for each process.");
         System.out.println("All the fields are to be seperated by space.");
         System.out.println("Enter (0 0 0 0) to stop.");
         while(true) {
-            System.out.print("enter fields: ");
+            System.out.print("enter fields for process number "+countP+" : ");
             String input = scanner.nextLine();
             String[] fields = input.split("[ ]+");
             if(fields.length != 4) {
                 System.out.println("Enter only 4 numbers, each seperated by spaces");
                 continue;
             }
-            if(fields[0].equals("0") 
-            && fields[1].equals("0") 
-            && fields[2].equals("0") 
-            && fields[3].equals("0")) {
+            if(fields[0].equals("0")
+                    && fields[1].equals("0")
+                    && fields[2].equals("0")
+                    && fields[3].equals("0")) {
                 break;
             }
             int pid = 0;
@@ -38,8 +39,15 @@ class Interface{
                 arriveTime = Integer.parseInt(fields[1]);
                 burstTime = Integer.parseInt(fields[2]);
                 priority = Integer.parseInt(fields[3]);
+
+                if (pid < 0 || arriveTime < 0 || burstTime < 0 || priority < 0){
+                    throw new Exception("Make sure that all the fields are non-negative numbers.");
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Make sure that all the fields are numbers.");
+                continue;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
                 continue;
             }
 
@@ -49,9 +57,11 @@ class Interface{
                 System.out.println("No two processes should have the same pid.");
                 continue;
             }
+
+            countP++;
         }
 
-        scheduler.run(); 
+        scheduler.run();
 
         System.out.println("\n--- Process Statistics ---");
         double sumWaitingTime = 0;
@@ -80,21 +90,5 @@ class Interface{
             System.out.println(timeline);
         }
 
-        /*Todo */
-
-        /*The class process has various attributes related to processes */
-        /*The class scheduler handles all the logic related scheduling, the method
-         * The method addProcess() adds a process to be scheduled.
-         * run() simulates the schudling algorithm.
-         * The method getProcesses() returns an arraylist processes with required data(waiting time, turnaround time, response time) added.
-         * Sorted from smallest arrival time to biggest arrival time.
-         * The method getTimelines() returns an arraylist of all timelines in correct order, A timeline is made of
-         * a process ID, time of admission to cpu, and time of discharge from cpu.
-         */
-        /*Please create the interface, the interface must consist of waiting times, response times, turnaround times
-         * for all processes (make use of getProcesses() method in the scheduler class). It must also contain the gantt chart depictiing the scheduler activite.
-         * (make use of the getTimelines() method for the scheduler method.)
-         */
-        //make sure to call run() first, than you can use getProcesses() and getTimelines().
     }
 }
