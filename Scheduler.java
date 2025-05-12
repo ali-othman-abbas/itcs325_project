@@ -82,7 +82,7 @@ class Scheduler {
             }
 
             if(admited != null && !admited.wasAdmited()) {
-                admited.setResponseTime(time);
+                admited.setResponseTime(time- admited.getArrivalTime());
             }
 
             time++;
